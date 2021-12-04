@@ -1,36 +1,47 @@
 import os, shutil, mimetypes
 
-def get_extensions_for_type(general_type):
-    for ext in mimetypes.types_map:
-        if mimetypes.types_map[ext].split('/')[0] == general_type:
-            yield ext
-additional_extensions = {
-    'text' : ['.docx', '.pdf'],
-    'video' : ['.mkv'],
-    'audio':[],
-    'image': ['.webp']
-    }
-source_folder = os.getcwd() + "/"
-files = os.listdir(source_folder)
 
-def folder_handler(new_list, type):  
-    print(type, new_list) 
+current_directory = os.getcwd()
+files = os.listdir(current_directory)
+file_types = ["audio", "image", "text", "video"]
+additional_extensions = {
+    "audio": [],
+    "image": [".webp"],
+    "text": [".docx", ".pdf"],
+    "video": [".mkv"],
+}
+
+
+def get_extensions_for_type(general_type):
+    for extension in mimetypes.types_map:
+        if mimetypes.types_map[extension].split("/")[0] == general_type:
+            yield extension
+
+
+def folder_handler(extensions_list, file_type):
     for file in files:
         name, ext = os.path.splitext(file)
-        if not os.path.exists(".//" + type):
-            os.makedirs("./" + type)
-        source = source_folder + file
-        destination = source_folder + type + "/" + file
-        if ext in new_list and ext != '.py':
+        if not os.path.exists(f"./{file_type}"):
+            os.makedirs(f"./{file_type}")
+        source = f"{current_directory}/{file}"
+        destination = f"{current_directory}/{file_type}/{file}"
+        if ext in extensions_list and ext != ".py":
             try:
                 shutil.move(source, destination)
-                print(f"")
             except Exception as e:
                 print(e)
-types = ['video', 'audio', 'image', 'text']
-for type in types:
-    try:
-        new_list = (list(get_extensions_for_type(type))+additional_extensions[type])
-        folder_handler(new_list, type)
-    except Exception as e:
-        print()
+
+
+def main():
+    for file_type in file_types:
+        try:
+            extensions_list = (
+                list(get_extensions_for_type(file_type))
+                + additional_extensions[file_type]
+            )
+            folder_handler(extensions_list, file_type)
+        except Exception as e:
+            print(e)
+
+
+main()
