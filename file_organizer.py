@@ -21,7 +21,7 @@ def get_extensions_for_type(general_type):
 def folder_handler(extensions_list, file_type):
     for file in files:
         name, ext = os.path.splitext(file)
-        if not os.path.exists(f"./{file_type}"):
+        if not os.path.exists(f"./{file_type}") and ext in extensions_list:
             os.makedirs(f"./{file_type}")
         source = f"{current_directory}/{file}"
         destination = f"{current_directory}/{file_type}/{file}"
