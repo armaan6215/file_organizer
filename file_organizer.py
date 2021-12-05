@@ -1,7 +1,11 @@
 import os, shutil, mimetypes
 
 
+new_directory = input("Enter your path: ")
+new_directory = os.path.join(new_directory)
+changed_directory = os.chdir(new_directory)
 current_directory = os.getcwd()
+print(f"You have selected {os.getcwd()}")
 files = os.listdir(current_directory)
 file_types = ["audio", "image", "text", "video"]
 additional_extensions = {
@@ -29,6 +33,7 @@ def folder_handler(extensions_list, file_type):
         if ext in extensions_list and ext != ".py":
             try:
                 shutil.move(source, destination)
+                print("Files moved successfully...!!!")
             except Exception as e:
                 print(e)
 
@@ -45,4 +50,10 @@ def main():
             print(e)
 
 if __name__ == "__main__":
-    main()
+    choice = input(f"Do you want to move files from {current_directory} to new folder? Y/N")
+    if choice == "y":
+        main()
+    elif choice == "n":
+        exit()
+    else:
+        print("Invalid Input")
