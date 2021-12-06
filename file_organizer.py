@@ -1,12 +1,7 @@
-import os, shutil, mimetypes
+import os
+import shutil
+import mimetypes, argparse
 
-
-new_directory = input("Enter your path: ")
-new_directory = os.path.join(new_directory)
-changed_directory = os.chdir(new_directory)
-current_directory = os.getcwd()
-print(f"You have selected {os.getcwd()}")
-files = os.listdir(current_directory)
 file_types = ["audio", "image", "text", "video"]
 additional_extensions = {
     "audio": [],
@@ -14,6 +9,21 @@ additional_extensions = {
     "text": [".docx", ".pdf"],
     "video": [".mkv"],
 }
+
+
+def arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path")
+    args = parser.parse_args()
+    os.chdir(os.path.join(args.path))
+    current_directory = os.getcwd()
+    files = os.listdir(current_directory)
+    return {"current_directory": current_directory, "files": files}
+
+
+returned_from_argparser = arg_parser()
+files = returned_from_argparser["files"]
+current_directory = returned_from_argparser["current_directory"]
 
 
 def get_extensions_for_type(general_type):
@@ -49,8 +59,11 @@ def main():
         except Exception as e:
             print(e)
 
+
 if __name__ == "__main__":
-    choice = input(f"Do you want to move files from {current_directory} to new folder? Y/N")
+    choice = input(
+        f"Do you want to move files from {current_directory} to new folder? Y/N"
+    )
     if choice == "y":
         main()
     elif choice == "n":
